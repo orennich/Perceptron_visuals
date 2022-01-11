@@ -72,7 +72,7 @@ class perceptron:
                 
                 if (prediction * label) <= 0:
                     self.theta.append(self.theta[-1] + label*self.data[set].T[i])
-                    self.updates.append(self.data[set].T[i])
+                    self.updates.append(label*self.data[set].T[i])
                     return False
                     
         return True

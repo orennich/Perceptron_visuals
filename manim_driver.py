@@ -91,7 +91,7 @@ class Perceptron(Scene):
         )
         
         
-        
+        theta_text = Text('')
         
         
         for i in range(1, len(obj.theta)):
@@ -113,16 +113,39 @@ class Perceptron(Scene):
             self.wait(0.5)
             self.play(
                 ReplacementTransform(framebox1, framebox2),
+                FadeOut(theta_text)
             )
             self.wait(0.5)
             
             
+            update_vec = Arrow(ORIGIN, [obj.updates[i][0], obj.updates[i][1], 0], color=YELLOW, buff=0, max_tip_length_to_length_ratio=0.1 )
+                                           
+            self.add(update_vec)
+            self.play(Create(update_vec))
             
-            new_theta_mobj = Arrow(ORIGIN, [obj.theta[i][0], obj.theta[i][1], 0], buff=0)
+            start = [obj.theta[i-1][0], obj.theta[i-1][1], 0]
+            tip = [obj.updates[i][0] + obj.theta[i-1][0], obj.updates[i][1]+obj.theta[i-1][1], 0]
+            
+            new_update_vec = Arrow(start, tip, color=YELLOW, buff=0, max_tip_length_to_length_ratio=0.1 )
+            
             self.play(
-                ReplacementTransform(theta_mobj, new_theta_mobj),
+                ReplacementTransform(update_vec, new_update_vec),
+            )
+            update_vec = new_update_vec
+            
+            
+            
+            new_theta_mobj = Arrow(ORIGIN, [obj.theta[i][0], obj.theta[i][1], 0], buff=0, max_tip_length_to_length_ratio=0.1)
+            
+            #theta_text = MathTex(r"\overline { \theta }").next_to(new_theta_mobj.get_end())
+            
+            self.play(
+                FadeOut(theta_mobj, update_vec),
+                #FadeIn(theta_text),
+                FadeIn(new_theta_mobj)
             )
             theta_mobj = new_theta_mobj
+            self.remove(update_vec)
             
             self.wait(0.5)
             
@@ -143,10 +166,8 @@ class Perceptron(Scene):
             
             
             
-            if i == 2:
-                break
-            
-            
+    
+        
             
             
         
